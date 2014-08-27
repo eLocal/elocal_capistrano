@@ -1,21 +1,22 @@
 Capistrano::Configuration.instance.load do
+  set(:puma_application_name) { "#{application}_puma" }
   namespace :puma do
     namespace :upstart do
-      %w(start stop status).each do |t|
-        desc "Perform #{t} of the api_puma service"
+      %w(reload start stop status).each do |t|
+        desc "Perform #{t} of the _puma service"
         task t, roles: :app, except: { no_release: true } do
-          sudo "#{t} api_puma"
+          sudo "#{t} #{puma_application_name}"
         end
       end
 
-      desc 'Perform a restart of the api_puma service'
+      desc 'Perform a restart of the application puma service'
       task :restart, roles: :app, except: { no_release: true } do
         run <<-CMD
-          pid=`status api_puma | grep -o -E '[0-9]+'`;
+          pid=`status #{puma_application_name} | grep -o -E '[0-9]+'`;
           if [ -z $pid ]; then
-            sudo start api_puma;
+            sudo start #{puma_application_name};
           else
-            kill -USR1 $pid;
+            sudo reload #{puma_application_name};
           fi
         CMD
       end
