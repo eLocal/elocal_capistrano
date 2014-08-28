@@ -12,13 +12,8 @@ Capistrano::Configuration.instance.load do
       desc 'Perform a restart of the application puma service'
       task :restart, roles: :app, except: { no_release: true } do
         Array(puma_application_name).each do |app_name|
-          sudo <<-CMD
-            pid=`status #{app_name} | grep -o -E '[0-9]+'`;
-            if [ -z $pid ]; then
-              start #{app_name};
-            else
-              reload #{app_name};
-            fi
+          run <<-CMD.strip
+            pid=`status #{app_name} | grep -o -E '[0-9]+'`; if [ -z $pid ]; then sudo start #{app_name}; else sudo reload #{app_name}; fi
           CMD
         end
       end
