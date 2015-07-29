@@ -1,6 +1,6 @@
 # Elocal Capistrano
 
-A bunch of handy [Capistrano 2.0](https://github.com/capistrano/capistrano/wiki) tasks.
+A bunch of handy [Capistrano](https://github.com/capistrano/capistrano/wiki) tasks.
 
 ## Usage
 
@@ -86,7 +86,7 @@ Generally, this will be hooked in like:
 
 ### Syslog
 
-    cap syslog:grep -s pattern=abc -s all_logs=true
+    cap syslog:grep pattern=abc all_logs=true
 
 Utility to grep syslog for a specific pattern.
 
