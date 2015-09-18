@@ -28,6 +28,15 @@ namespace :upstart do
         end
       end
     end
+
+    desc 'Perform a start/stop not a reload of the application puma service'
+    task :hard_restart do
+      on release_roles :app do
+        Array(fetch(:puma_application_name)).each do |app_name|
+          sudo :restart, app_name
+        end
+      end
+    end
   end
 
   namespace :delayed_job do
