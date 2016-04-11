@@ -2,6 +2,7 @@ namespace :load do
   task :defaults do
     set :puma_application_name, -> { "#{fetch(:application)}_puma" }
     set :delayed_job_application_name, -> { "#{fetch(:application)}_delayed_job" }
+    set :shoryuken_application_name, -> { "#{fetch(:application)}_shoryuken" }
   end
 end
 
@@ -39,23 +40,25 @@ namespace :upstart do
     end
   end
 
-  namespace :delayed_job do
-    %w(start stop status).each do |t|
-      desc "Perform #{t} of the delayed_job service"
-      task t do
-        on release_roles :app do
-          sudo t, fetch(:delayed_job_application_name)
+  %i(delayed_job shoryuken).each do |task_name|
+    namespace task_name do
+      %w(start stop status).each do |t|
+        desc "Perform #{t} of the #{task_name} service"
+        task t do
+          on release_roles :app do
+            sudo t, fetch(:"#{task_name}_application_name")
+          end
         end
       end
-    end
 
-    desc 'Perform a restart of the application puma service'
-    task :restart do
-      on release_roles :app do
-        dj_name = fetch(:delayed_job_application_name)
-        execute <<-CMD.strip
-          pid=`status #{dj_name} | grep -o -E '[0-9]+'`; if [ -z $pid ]; then sudo start #{dj_name}; else sudo restart #{dj_name}; fi
-        CMD
+      desc 'Perform a restart of the application #{task_name} service'
+      task :restart do
+        on release_roles :app do
+          job_name = fetch(:"#{task_name}_application_name")
+          execute <<-CMD.strip
+            pid=`status #{job_name} | grep -o -E '[0-9]+'`; if [ -z $pid ]; then sudo start #{job_name}; else sudo restart #{job_name}; fi
+          CMD
+        end
       end
     end
   end
