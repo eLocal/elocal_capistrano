@@ -27,6 +27,7 @@ namespace :git do
       run_locally do
         tag = increment_patch_version
         update_versions_file(tag)
+        execute :git, "add #{fetch(:versions_path)}"
         execute :git, "commit -m '[RELEASE][#{fetch(:rails_env)}] Update release tag for #{fetch(:rails_env)} to #{tag}' #{fetch(:versions_path)}"
         execute :git, 'push origin master'
         execute :git, "tag #{tag}"
@@ -42,6 +43,7 @@ namespace :git do
       run_locally do
         tag = ReleaseTag.current('staging')
         update_versions_file(tag)
+        execute :git, "add #{fetch(:versions_path)}"
         execute :git, "commit -m '[RELEASE][#{fetch(:rails_env)}] Update release tag for #{fetch(:rails_env)} to #{tag}' #{fetch(:versions_path)}"
         execute :git, 'push origin master'
         set :branch, tag.to_s
