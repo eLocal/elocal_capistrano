@@ -41,12 +41,17 @@ namespace :git do
     DESC
     task :use_release do
       run_locally do
-        tag = ReleaseTag.current('staging')
-        update_versions_file(tag)
-        execute :git, "add #{fetch(:versions_path)}"
-        execute :git, "commit -m '[RELEASE][#{fetch(:rails_env)}] Update release tag for #{fetch(:rails_env)} to #{tag}' #{fetch(:versions_path)}"
-        execute :git, 'push origin master'
-        set :branch, tag.to_s
+        staging_tag = ReleaseTag.current('staging')
+        current_tag = ReleaseTag.current(fetch(:stage).to_s)
+        if staging_tag != current_tag
+          update_versions_file(staging_tag)
+          execute :git, "add #{fetch(:versions_path)}"
+          execute :git, "commit -m '[RELEASE][#{fetch(:rails_env)}] Update release tag for #{fetch(:rails_env)} to #{tag}' #{fetch(:versions_path)}"
+          execute :git, 'push origin master'
+        else
+          puts 'Current version up-to-date. No update needed'
+        end
+        set :branch, staging_tag.to_s
       end
     end
 
