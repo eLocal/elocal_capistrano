@@ -1,6 +1,7 @@
 namespace :load do
   task :defaults do
-    set :versions_path, 'config/versions.yml'
+    set :syslog_grep_pattern, ENV['pattern']
+    set :syslog_all_logs, %w(y Y yes true 1).include?(ENV['all_logs'])
   end
 end
 

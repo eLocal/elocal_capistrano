@@ -1,9 +1,9 @@
 namespace :load do
   task :defaults do
-    set :syslog_grep_pattern, ENV['pattern']
-    set :syslog_all_logs, %w(y Y yes true 1).include?(ENV['all_logs'])
+    set :versions_path, 'config/versions.yml'
   end
 end
+
 namespace :git do
   namespace :tagging do
     include ElocalCapistrano::GitTools
