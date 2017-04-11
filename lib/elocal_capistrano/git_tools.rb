@@ -78,7 +78,11 @@ module ElocalCapistrano::GitTools
   end
 
   def versions_hash
-    YAML.load_file(fetch(:versions_path))
+    if File.file?(fetch(:versions_path))
+      YAML.load_file(fetch(:versions_path))
+    else
+      {}
+    end
   end
 
   def update_versions_file(tag)
