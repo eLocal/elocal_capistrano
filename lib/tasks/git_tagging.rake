@@ -46,7 +46,7 @@ namespace :git do
         if staging_tag != current_tag
           update_versions_file(staging_tag)
           execute :git, "add #{fetch(:versions_path)}"
-          execute :git, "commit -m '[RELEASE][#{fetch(:rails_env)}] Update release tag for #{fetch(:rails_env)} to #{tag}' #{fetch(:versions_path)}"
+          execute :git, "commit -m '[RELEASE][#{fetch(:rails_env)}] Update release tag for #{fetch(:rails_env)} to #{staging_tag}' #{fetch(:versions_path)}"
           execute :git, 'push origin master'
         else
           puts 'Current version up-to-date. No update needed'
