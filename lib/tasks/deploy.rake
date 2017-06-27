@@ -5,6 +5,9 @@ namespace :load do
   end
 end
 
+# For our rails applications, the actual ruby code is run
+# by a different user than our deploy user. We want to make sure the directory
+# permissions are set appropriately
 namespace :deploy do
   task :set_app_ownership do
     on release_roles(:all) do
