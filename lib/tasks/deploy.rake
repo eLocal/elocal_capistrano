@@ -15,5 +15,10 @@ namespace :deploy do
         sudo "chown -R #{fetch(:owned_by_user)}:#{fetch(:owned_by_group)} ."
       end
     end
+    on release_roles(:all) do
+      within shared_path do
+        sudo "chown -R #{fetch(:owned_by_user)}:#{fetch(:owned_by_group)} ."
+      end
+    end
   end
 end
