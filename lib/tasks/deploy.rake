@@ -3,7 +3,7 @@ namespace :load do
     set :owned_by_user, 'app'
     set :owned_by_group, 'deploy'
     set :release_paths_to_be_owned_by_app, '.'
-    set :shared_paths_to_be_owned_by_app, 'log pids tmp'
+    set :shared_paths_to_be_owned_by_app, '.'
   end
 end
 
