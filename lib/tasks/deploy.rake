@@ -22,6 +22,7 @@ namespace :deploy do
       within shared_path do
         paths = Array(fetch(:shared_paths_to_be_owned_by_app)).join(' ')
         sudo "chown -R #{fetch(:owned_by_user)}:#{fetch(:owned_by_group)} #{paths}"
+        sudo "chmod g+w -R #{paths}"
       end
     end
   end
