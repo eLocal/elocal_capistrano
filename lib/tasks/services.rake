@@ -3,9 +3,11 @@ namespace :load do
     set :puma_application_name, -> { "#{fetch(:application)}_puma" }
     set :delayed_job_application_name, -> { "#{fetch(:application)}_delayed_job" }
     set :shoryuken_application_name, -> { "#{fetch(:application)}_shoryuken" }
+    set :sidekiq_application_name, -> { "#{fetch(:application)}_sidekiq" }
     set :delayed_job_release_role, -> { :app }
     set :puma_release_role, -> { :app }
     set :shoryuken_release_role, -> { :app }
+    set :sidekiq_release_role, -> { :app }
   end
 end
 
@@ -43,7 +45,7 @@ namespace :service do
     end
   end
 
-  %i(delayed_job shoryuken).each do |task_name|
+  %i(delayed_job sidekiq shoryuken).each do |task_name|
     namespace task_name do
       %w(start stop status).each do |t|
         desc "Perform #{t} of the #{task_name} service"
