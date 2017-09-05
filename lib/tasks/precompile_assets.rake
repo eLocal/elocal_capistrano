@@ -14,7 +14,7 @@ namespace :assets do
   end
 
   desc "Commit precompiled assets and push to github"
-  task :push_assets do
+  task :push do
     run_locally do
       execute :git, "add #{fetch(:assets_path)}"
       execute :git, "commit -m '[RELEASE][#{fetch(:rails_env)}] Precompile assets for #{fetch(:rails_env)}' #{fetch(:assets_path)}"
