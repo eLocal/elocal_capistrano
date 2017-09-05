@@ -5,9 +5,7 @@ namespace :assets do
     set :assets_path, 'public/assets/'
   end
 
-  desc <<-DESC
-    Precompile assets
-  DESC
+  desc "Precompile assets"
   task :precompile do
     run_locally do
       execute "rake assets:clean"
@@ -15,14 +13,19 @@ namespace :assets do
     end
   end
 
-  desc <<-DESC
-    Commit precompiled assets and push to github
-  DESC
+  desc "Commit precompiled assets and push to github"
   task :push_assets do
     run_locally do
       execute :git, "add #{fetch(:assets_path)}"
       execute :git, "commit -m '[RELEASE][#{fetch(:rails_env)}] Precompile assets for #{fetch(:rails_env)}' #{fetch(:assets_path)}"
       execute :git, 'push origin master'
+    end
+  end
+
+  desc "Remove all local precompiled assets"
+  task :cleanup do
+    run_locally do
+      execute "rm -rf", fetch(:assets_path)
     end
   end
 end
