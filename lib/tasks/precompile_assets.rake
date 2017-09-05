@@ -28,4 +28,9 @@ namespace :assets do
       execute "rm -rf", fetch(:assets_path)
     end
   end
+
+  desc "Clear existing compilation task"
+  task :skip_regular_asset_compilation do
+    Rake::Task["deploy:compile_assets"].clear
+  end
 end
