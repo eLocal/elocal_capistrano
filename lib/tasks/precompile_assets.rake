@@ -25,7 +25,7 @@ namespace :assets do
   desc "Remove all local precompiled assets"
   task :cleanup do
     run_locally do
-      execute "rm -rf", fetch(:assets_path)
+      execute "rm -rf #{fetch(:assets_path)}"
     end
   end
 
