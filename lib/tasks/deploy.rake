@@ -15,14 +15,15 @@ namespace :deploy do
     on release_roles(:all) do
       within release_path do
         paths = Array(fetch(:release_paths_to_be_owned_by_app)).join(' ')
-        sudo "chown -R #{fetch(:owned_by_user)}:#{fetch(:owned_by_group)} #{paths}"
+        sudo "chown -R --from=edev #{fetch(:owned_by_user)}:#{fetch(:owned_by_group)} #{paths}"
       end
     end
     on release_roles(:all) do
       within shared_path do
         paths = Array(fetch(:shared_paths_to_be_owned_by_app)).join(' ')
-        sudo "chown -R #{fetch(:owned_by_user)}:#{fetch(:owned_by_group)} #{paths}"
-        sudo "chmod g+w -R #{paths}"
+        sudo "chown -R --from=edev #{fetch(:owned_by_user)}:#{fetch(:owned_by_group)} #{paths}"
+        sudo "find #{paths} -type d -not -perm -g=w -print0 | sudo xargs -r -0 chmod g+w"
+        sudo "find #{paths} -type f -not -perm -g=w -print0 | sudo xargs -r -0 chmod g+w"
       end
     end
   end
