@@ -25,14 +25,18 @@ namespace :git do
     DESC
     task :tag_release do
       run_locally do
-        tag = increment_patch_version
-        update_versions_file(tag)
-        execute :git, "add #{fetch(:versions_path)}"
-        execute :git, "commit -m '[RELEASE][#{fetch(:rails_env)}] Update release tag for #{fetch(:rails_env)} to #{tag}' #{fetch(:versions_path)}"
-        execute :git, 'push origin master'
-        execute :git, "tag #{tag}"
-        execute :git, "push origin #{tag}"
-        set :branch, tag.to_s
+        unless ENV['SKIP_GIT_TAGGING'].to_s.upcase == 'Y'
+          tag = increment_patch_version
+          update_versions_file(tag)
+          execute :git, "add #{fetch(:versions_path)}"
+          execute :git, "commit -m '[RELEASE][#{fetch(:rails_env)}] Update release tag for #{fetch(:rails_env)} to #{tag}' #{fetch(:versions_path)}"
+          execute :git, 'push origin master'
+          execute :git, "tag #{tag}"
+          execute :git, "push origin #{tag}"
+          set :branch, tag.to_s
+        else
+          set :branch, ReleaseTag.current('staging').to_s
+        end
       end
     end
 
