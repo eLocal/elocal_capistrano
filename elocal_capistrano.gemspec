@@ -5,7 +5,7 @@ require 'elocal_capistrano/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "elocal_capistrano"
-  spec.version       = "2.3.8"
+  spec.version       = ElocalCapistrano::VERSION
   spec.authors       = ["Rob Di Marco"]
   spec.email         = ["rob@elocal.com"]
   spec.summary       = %q{Common eLocal Capistrano tasks}
