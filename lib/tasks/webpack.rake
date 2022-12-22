@@ -3,7 +3,15 @@
 namespace :deploy do
   namespace :webpack do
     def frontend_changed?
-      !`git diff #{ReleaseTag.latest} #{fetch(:fronted_path)}`.empty?
+      fronted_path = fetch(:fronted_path)
+      frontend_changes = `git diff #{ReleaseTag.latest} #{fronted_path}`
+      frontend_changes = frontend_changes.split.select { |str| str.include?(fronted_path) }.map { |str| str[2..-1] }.uniq
+
+      frontend_changes_count = frontend_changes.count
+      print_info(nil, "Changed files in #{fronted_path}: Total #{frontend_changes_count}:")
+      frontend_changes.each { |frontend_change| print_info(nil, frontend_change) }
+
+      frontend_changes_count.positive?
     end
 
     def force_webpack_release?
@@ -71,7 +79,7 @@ namespace :deploy do
 
   def print_info(task, str)
     on roles(:all) do
-      info "[#{task.name}] #{str}"
+      info "[#{task&.name}] #{str}"
     end
   end
 end
