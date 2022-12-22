@@ -82,7 +82,7 @@ namespace :deploy do
     task :add_to_version_control do |task|
       webpack_manifest_file = fetch(:webpack_manifest_file)
 
-      print_info(task, "Commit to git the updated Webpack manifest #{webpack_manifest_file} with its S3 paths")
+      print_info(task, "Committing to git the updated Webpack manifest #{webpack_manifest_file} with its S3 paths")
 
       webpack_manifest_file_changed = `git diff #{webpack_manifest_file}`.length.positive?
 
@@ -91,7 +91,7 @@ namespace :deploy do
           execute "git commit -m '[FRONTEND] Updated webpack bundle' #{webpack_manifest_file}"
         end
       else
-        print_info(task, "Skipping committing to git since no changes have been detected for #{webpack_manifest_file}")
+        print_info(task, "Skipping commit to git since no changes have been detected for #{webpack_manifest_file}")
       end
     end
   end
