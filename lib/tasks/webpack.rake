@@ -79,7 +79,7 @@ namespace :deploy do
 
   def print_info(task, str)
     on roles(:all) do
-      info "[#{task&.name}] #{str}"
+      info "[#{task&.name || '-'}] #{str}"
     end
   end
 end
