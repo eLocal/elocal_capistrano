@@ -1,20 +1,34 @@
+# frozen_string_literal: true
+
 namespace :deploy do
   namespace :webpack do
     def frontend_changed?
-      %x(git diff #{ReleaseTag.latest} #{fetch(:fronted_path)}).length > 0
+      !`git diff #{ReleaseTag.latest} #{fetch(:fronted_path)}`.empty?
+    end
+
+    def force_webpack_release?
+      fetch(:force_webpack_release, false) || %w(y Y yes true 1).include?(ENV['force_webpack_release'])
     end
 
     desc <<-DESC
       Check if a new frontend release is required and deploy to S3
     DESC
-    task :release do
-      on roles(:all) do
-        if frontend_changed? || fetch(:force_webpack_release, false)
-          info '[deploy:webpack] Creating new webpack release'
-          invoke 'deploy:webpack:make_new_release'
-        else
-          info '[deploy:webpack] Skipping webpack release as no changes were detected in frontend directory'
-        end
+    task :release do |task|
+      print_info(task, 'Check if a new frontend release is required and deploy to S3')
+
+      print_info(task, "Check if #{fetch(:fronted_path)} changed since release #{ReleaseTag.latest}")
+      new_webpack_release_needed = frontend_changed?
+
+      unless new_webpack_release_needed
+        print_info(task, 'Check if a Webpack release is forced')
+        new_webpack_release_needed = force_webpack_release?
+      end
+
+      if new_webpack_release_needed
+        print_info(task, 'Creating new webpack release')
+        invoke 'deploy:webpack:make_new_release'
+      else
+        print_info(task, 'Skipping webpack release as no changes were detected in frontend directory')
       end
     end
 
@@ -52,6 +66,12 @@ namespace :deploy do
       run_locally do
         execute "git commit -m '[FRONTEND] Updated webpack bundle' #{fetch(:webpack_manifest_file)}"
       end
+    end
+  end
+
+  def print_info(task, str)
+    on roles(:all) do
+      info "[#{task.name}] #{str}"
     end
   end
 end
