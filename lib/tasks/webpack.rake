@@ -91,7 +91,7 @@ namespace :deploy do
           execute "git commit -m '[FRONTEND] Updated webpack bundle' #{webpack_manifest_file}"
         end
       else
-        print_info(task, "Skipping committing to git since no changes has been detected for #{webpack_manifest_file}")
+        print_info(task, "Skipping committing to git since no changes have been detected for #{webpack_manifest_file}")
       end
     end
   end
