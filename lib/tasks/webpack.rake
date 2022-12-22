@@ -6,9 +6,9 @@ namespace :deploy do
       fronted_path = fetch(:fronted_path)
       frontend_changes = `git diff #{ReleaseTag.latest} #{fronted_path}`
       frontend_changes = frontend_changes.split.select { |str| str.include?(fronted_path) }.map { |str| str[2..-1] }.uniq
-
       frontend_changes_count = frontend_changes.count
-      print_info(nil, "Changed files in #{fronted_path}: Total #{frontend_changes_count}:")
+
+      print_info(nil, "Changed files in #{fronted_path}: Total #{frontend_changes_count}#{':' if frontend_changes_count.positive?}")
       frontend_changes.each { |frontend_change| print_info(nil, frontend_change) }
 
       frontend_changes_count.positive?
